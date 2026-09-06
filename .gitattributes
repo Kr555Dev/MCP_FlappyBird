@@ -1,0 +1,3 @@
+# GitHub Linguist overrides
+# Mark TextMesh Pro package files as vendored to exclude them from GitHub language statistics
+"Assets/TextMesh Pro/**" linguist-vendored
