@@ -10,6 +10,12 @@ public class CameraController : MonoBehaviour
     private Coroutine shakeRoutine;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void Init()
+    {
+        EnsureExists();
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, mode) => EnsureExists();
+    }
+
     static void EnsureExists()
     {
         if (Camera.main != null && Camera.main.GetComponent<CameraController>() == null)

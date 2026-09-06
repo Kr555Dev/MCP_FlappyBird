@@ -60,6 +60,11 @@ public class HUDController : MonoBehaviour
         EnsureVisualPolish();
     }
 
+    void OnDestroy()
+    {
+        if (instance == this) instance = null;
+    }
+
     void AutoLoadSprites()
     {
         if (cardBackgroundSprite == null) 

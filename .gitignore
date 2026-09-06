@@ -69,6 +69,14 @@ crashlytics-build.properties
 
 .vsconfig
 
+# WEBGL build
+WEBGL build/
+WEBGL build/**
+WEBGL build/**/**
+
+# Agent skills cache
+.agents/
+
 # ==============================================================================
 # Flappy Scene & Dependencies Only Filter
 # Exclude all non-Flappy scenes, scripts, audio, and sprites

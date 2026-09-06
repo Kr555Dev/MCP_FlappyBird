@@ -26,6 +26,12 @@ public class BirdCosmetics : MonoBehaviour
     private TrailRenderer  trailRenderer;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void Init()
+    {
+        EnsureExists();
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, mode) => EnsureExists();
+    }
+
     static void EnsureExists()
     {
         GameObject player = GameObject.FindWithTag("Player");

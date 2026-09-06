@@ -36,7 +36,18 @@ public class VisualEffectsManager : MonoBehaviour
         CreateParticleSystems();
     }
 
+    void OnDestroy()
+    {
+        if (instance == this) instance = null;
+    }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void Init()
+    {
+        EnsureExists();
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, mode) => EnsureExists();
+    }
+
     static void EnsureExists()
     {
         if (FindFirstObjectByType<VisualEffectsManager>() == null)

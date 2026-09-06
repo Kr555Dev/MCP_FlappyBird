@@ -36,6 +36,12 @@ public class ShopUIController : MonoBehaviour
     private List<GameObject> activeCards = new List<GameObject>();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void Init()
+    {
+        EnsureExists();
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, mode) => EnsureExists();
+    }
+
     static void EnsureExists()
     {
         if (FindFirstObjectByType<ShopUIController>() == null)
@@ -57,6 +63,11 @@ public class ShopUIController : MonoBehaviour
 
         AutoLoadSprites();
         EnsureShopPanel();
+    }
+
+    void OnDestroy()
+    {
+        if (instance == this) instance = null;
     }
 
     void AutoLoadSprites()

@@ -71,6 +71,12 @@ public class ShopManager : MonoBehaviour
     private List<CosmeticItem> catalog = new List<CosmeticItem>();
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void Init()
+    {
+        EnsureExists();
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, mode) => EnsureExists();
+    }
+
     static void EnsureExists()
     {
         if (FindFirstObjectByType<ShopManager>() == null)
@@ -87,6 +93,11 @@ public class ShopManager : MonoBehaviour
 
         AutoLoadSprites();
         BuildCatalog();
+    }
+
+    void OnDestroy()
+    {
+        if (instance == this) instance = null;
     }
 
     void AutoLoadSprites()

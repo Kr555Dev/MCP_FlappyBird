@@ -63,6 +63,11 @@ public class FlappyGameManager : MonoBehaviour
         }
     }
 
+    void OnDestroy()
+    {
+        if (instance == this) instance = null;
+    }
+
     void Start()
     {
         if (config == null)
