@@ -56,7 +56,19 @@ public class CosmeticItem
 /// </summary>
 public class ShopManager : MonoBehaviour
 {
-    public static ShopManager instance { get; private set; }
+    private static ShopManager _instance;
+    public static ShopManager instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<ShopManager>();
+            }
+            return _instance;
+        }
+        private set => _instance = value;
+    }
 
     public static event Action<CosmeticType, string> OnCosmeticEquipped;
     public static event Action                       OnShopUpdated;
@@ -70,26 +82,10 @@ public class ShopManager : MonoBehaviour
 
     private List<CosmeticItem> catalog = new List<CosmeticItem>();
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    static void Init()
-    {
-        EnsureExists();
-        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, mode) => EnsureExists();
-    }
-
-    static void EnsureExists()
-    {
-        if (FindFirstObjectByType<ShopManager>() == null)
-        {
-            GameObject go = new GameObject("ShopManager");
-            go.AddComponent<ShopManager>();
-        }
-    }
-
     void Awake()
     {
-        if (instance != null && instance != this) { Destroy(gameObject); return; }
-        instance = this;
+        if (_instance != null && _instance != this) { Destroy(gameObject); return; }
+        _instance = this;
 
         AutoLoadSprites();
         BuildCatalog();

@@ -8,7 +8,19 @@ using UnityEngine;
 /// </summary>
 public class VisualEffectsManager : MonoBehaviour
 {
-    public static VisualEffectsManager instance { get; private set; }
+    private static VisualEffectsManager _instance;
+    public static VisualEffectsManager instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<VisualEffectsManager>();
+            }
+            return _instance;
+        }
+        private set => _instance = value;
+    }
 
     [Header("Parallax Settings")]
     public float cloudScrollSpeed = 0.5f;
@@ -29,8 +41,8 @@ public class VisualEffectsManager : MonoBehaviour
     // =========================================================================
     void Awake()
     {
-        if (instance != null && instance != this) { Destroy(gameObject); return; }
-        instance = this;
+        if (_instance != null && _instance != this) { Destroy(gameObject); return; }
+        _instance = this;
 
         CreateBackgroundLayers();
         CreateParticleSystems();
@@ -38,23 +50,7 @@ public class VisualEffectsManager : MonoBehaviour
 
     void OnDestroy()
     {
-        if (instance == this) instance = null;
-    }
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    static void Init()
-    {
-        EnsureExists();
-        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, mode) => EnsureExists();
-    }
-
-    static void EnsureExists()
-    {
-        if (FindFirstObjectByType<VisualEffectsManager>() == null)
-        {
-            GameObject go = new GameObject("VisualEffectsManager");
-            go.AddComponent<VisualEffectsManager>();
-        }
+        if (_instance == this) _instance = null;
     }
 
     void OnEnable()

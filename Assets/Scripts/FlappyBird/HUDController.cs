@@ -12,7 +12,19 @@ using UnityEngine.UI;
 /// </summary>
 public class HUDController : MonoBehaviour
 {
-    public static HUDController instance { get; private set; }
+    private static HUDController _instance;
+    public static HUDController instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<HUDController>();
+            }
+            return _instance;
+        }
+        private set => _instance = value;
+    }
 
     [Header("In-Game HUD")]
     public TextMeshProUGUI scoreText;
@@ -53,16 +65,17 @@ public class HUDController : MonoBehaviour
 
     void Awake()
     {
-        if (instance != null && instance != this) { Destroy(gameObject); return; }
-        instance = this;
+        if (_instance != null && _instance != this) { Destroy(gameObject); return; }
+        _instance = this;
 
         AutoLoadSprites();
         EnsureVisualPolish();
+        WireButtons();
     }
 
     void OnDestroy()
     {
-        if (instance == this) instance = null;
+        if (_instance == this) _instance = null;
     }
 
     void AutoLoadSprites()
@@ -97,6 +110,8 @@ public class HUDController : MonoBehaviour
         FlappyGameManager.OnCoinsChanged     += UpdateCoins;
         FlappyGameManager.OnGymLevelUp       += ShowGymFlash;
         FlappyGameManager.OnGameStateChanged += OnGameStateChanged;
+
+        WireButtons();
     }
 
     void OnDisable()
@@ -108,25 +123,81 @@ public class HUDController : MonoBehaviour
         FlappyGameManager.OnGameStateChanged -= OnGameStateChanged;
     }
 
-    void Start()
+    public void WireButtons()
     {
-        // Wire buttons
         if (startButton != null)
-            startButton.onClick.AddListener(() => FlappyGameManager.instance?.StartGame());
+        {
+            startButton.onClick.RemoveListener(OnStartButtonClicked);
+            startButton.onClick.AddListener(OnStartButtonClicked);
+        }
 
         if (restartButton != null)
-            restartButton.onClick.AddListener(() => FlappyGameManager.instance?.RestartGame());
+        {
+            restartButton.onClick.RemoveListener(OnRestartButtonClicked);
+            restartButton.onClick.AddListener(OnRestartButtonClicked);
+        }
 
         if (menuShopButton != null)
-            menuShopButton.onClick.AddListener(OpenShop);
+        {
+            menuShopButton.onClick.RemoveListener(OnShopButtonClicked);
+            menuShopButton.onClick.AddListener(OnShopButtonClicked);
+        }
 
         if (gameOverShopButton != null)
-            gameOverShopButton.onClick.AddListener(OpenShop);
+        {
+            gameOverShopButton.onClick.RemoveListener(OnShopButtonClicked);
+            gameOverShopButton.onClick.AddListener(OnShopButtonClicked);
+        }
+    }
+
+    public void OnStartButtonClicked()
+    {
+        if (FlappyGameManager.instance != null)
+        {
+            FlappyGameManager.instance.StartGame();
+        }
+        SetPanelActive(mainMenuPanel, false);
+        SetPanelActive(gameOverPanel, false);
+        if (scoreText != null) scoreText.gameObject.SetActive(true);
+        if (coinCounterHUD != null) coinCounterHUD.SetActive(true);
+    }
+
+    public void OnRestartButtonClicked()
+    {
+        FlappyGameManager.autoStartOnLoad = true;
+        if (FlappyGameManager.instance != null)
+        {
+            FlappyGameManager.instance.RestartGame();
+        }
+        else
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        }
+    }
+
+    public void OnShopButtonClicked()
+    {
+        OpenShop();
+    }
+
+    void Start()
+    {
+        WireButtons();
 
         // Initial UI state
         SetPanelActive(gymLevelPanel, false);
         SetPanelActive(gameOverPanel, false);
-        ShowMainMenu();
+
+        if (FlappyGameManager.autoStartOnLoad || (FlappyGameManager.instance != null && FlappyGameManager.instance.CurrentState == GameState.Playing))
+        {
+            SetPanelActive(mainMenuPanel, false);
+            if (scoreText != null) scoreText.gameObject.SetActive(true);
+            if (coinCounterHUD != null) coinCounterHUD.SetActive(true);
+        }
+        else
+        {
+            ShowMainMenu();
+        }
 
         if (scoreText != null) scoreText.text = "0";
 
@@ -142,11 +213,24 @@ public class HUDController : MonoBehaviour
         if (coinCounterHUD != null) coinCounterHUD.SetActive(false);
         if (scoreText != null) scoreText.gameObject.SetActive(false);
 
+        if (FlappyGameManager.instance != null && FlappyGameManager.instance.CurrentState != GameState.MainMenu)
+        {
+            FlappyGameManager.instance.SetStateMainMenu();
+        }
+
         if (menuBestScoreText != null && FlappyGameManager.instance != null)
             menuBestScoreText.text = $"BEST: {FlappyGameManager.instance.BestScore}";
 
         if (menuTotalCoinsText != null && FlappyGameManager.instance != null)
             menuTotalCoinsText.text = $"COINS: {FlappyGameManager.instance.TotalCoins}";
+    }
+
+    public void ShowGameOverScreen()
+    {
+        SetPanelActive(mainMenuPanel, false);
+        SetPanelActive(gameOverPanel, true);
+        if (coinCounterHUD != null) coinCounterHUD.SetActive(false);
+        if (scoreText != null) scoreText.gameObject.SetActive(false);
     }
 
     public void OpenShop()

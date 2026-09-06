@@ -635,7 +635,64 @@ public static class FlappySceneBaker
         hud.heartSprite = heartSprite;
         EditorUtility.SetDirty(hud);
 
-        // 11. Save Scene
+        // 11. Bake Persistent Listeners on Buttons
+        if (startButton != null)
+        {
+            UnityEditor.Events.UnityEventTools.RemovePersistentListener(startButton.onClick, hud.OnStartButtonClicked);
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(startButton.onClick, hud.OnStartButtonClicked);
+            EditorUtility.SetDirty(startButton);
+        }
+
+        if (restartButton != null)
+        {
+            UnityEditor.Events.UnityEventTools.RemovePersistentListener(restartButton.onClick, hud.OnRestartButtonClicked);
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(restartButton.onClick, hud.OnRestartButtonClicked);
+            EditorUtility.SetDirty(restartButton);
+        }
+
+        if (menuShopButton != null)
+        {
+            UnityEditor.Events.UnityEventTools.RemovePersistentListener(menuShopButton.onClick, hud.OnShopButtonClicked);
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(menuShopButton.onClick, hud.OnShopButtonClicked);
+            EditorUtility.SetDirty(menuShopButton);
+        }
+
+        if (gameOverShopButton != null)
+        {
+            UnityEditor.Events.UnityEventTools.RemovePersistentListener(gameOverShopButton.onClick, hud.OnShopButtonClicked);
+            UnityEditor.Events.UnityEventTools.AddPersistentListener(gameOverShopButton.onClick, hud.OnShopButtonClicked);
+            EditorUtility.SetDirty(gameOverShopButton);
+        }
+
+        if (shopUI != null)
+        {
+            if (shopUI.closeButton != null)
+            {
+                UnityEditor.Events.UnityEventTools.RemovePersistentListener(shopUI.closeButton.onClick, shopUI.CloseShop);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(shopUI.closeButton.onClick, shopUI.CloseShop);
+                EditorUtility.SetDirty(shopUI.closeButton);
+            }
+            if (shopUI.tabHatsButton != null)
+            {
+                UnityEditor.Events.UnityEventTools.RemovePersistentListener(shopUI.tabHatsButton.onClick, shopUI.SelectHats);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(shopUI.tabHatsButton.onClick, shopUI.SelectHats);
+                EditorUtility.SetDirty(shopUI.tabHatsButton);
+            }
+            if (shopUI.tabSkinsButton != null)
+            {
+                UnityEditor.Events.UnityEventTools.RemovePersistentListener(shopUI.tabSkinsButton.onClick, shopUI.SelectSkins);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(shopUI.tabSkinsButton.onClick, shopUI.SelectSkins);
+                EditorUtility.SetDirty(shopUI.tabSkinsButton);
+            }
+            if (shopUI.tabTrailsButton != null)
+            {
+                UnityEditor.Events.UnityEventTools.RemovePersistentListener(shopUI.tabTrailsButton.onClick, shopUI.SelectTrails);
+                UnityEditor.Events.UnityEventTools.AddPersistentListener(shopUI.tabTrailsButton.onClick, shopUI.SelectTrails);
+                EditorUtility.SetDirty(shopUI.tabTrailsButton);
+            }
+        }
+
+        // 12. Save Scene
         EditorUtility.SetDirty(canvas.gameObject);
         EditorSceneManager.MarkSceneDirty(scene);
         bool saved = EditorSceneManager.SaveScene(scene);

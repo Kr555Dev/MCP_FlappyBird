@@ -9,7 +9,19 @@ using TMPro;
 /// </summary>
 public class ShopUIController : MonoBehaviour
 {
-    public static ShopUIController instance { get; private set; }
+    private static ShopUIController _instance;
+    public static ShopUIController instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<ShopUIController>();
+            }
+            return _instance;
+        }
+        private set => _instance = value;
+    }
 
     [Header("Panel References")]
     public GameObject      shopPanel;
@@ -35,39 +47,19 @@ public class ShopUIController : MonoBehaviour
     private CosmeticType currentCategory = CosmeticType.Hat;
     private List<GameObject> activeCards = new List<GameObject>();
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    static void Init()
-    {
-        EnsureExists();
-        UnityEngine.SceneManagement.SceneManager.sceneLoaded += (scene, mode) => EnsureExists();
-    }
-
-    static void EnsureExists()
-    {
-        if (FindFirstObjectByType<ShopUIController>() == null)
-        {
-            Canvas canvas = FindFirstObjectByType<Canvas>();
-            if (canvas != null)
-            {
-                GameObject go = new GameObject("ShopUIController");
-                go.transform.SetParent(canvas.transform, false);
-                go.AddComponent<ShopUIController>();
-            }
-        }
-    }
-
     void Awake()
     {
-        if (instance != null && instance != this) { Destroy(gameObject); return; }
-        instance = this;
+        if (_instance != null && _instance != this) { Destroy(gameObject); return; }
+        _instance = this;
 
         AutoLoadSprites();
         EnsureShopPanel();
+        WireButtons();
     }
 
     void OnDestroy()
     {
-        if (instance == this) instance = null;
+        if (_instance == this) _instance = null;
     }
 
     void AutoLoadSprites()
@@ -91,6 +83,8 @@ public class ShopUIController : MonoBehaviour
     {
         FlappyGameManager.OnCoinsChanged += HandleCoinsChanged;
         ShopManager.OnShopUpdated        += RefreshUI;
+
+        WireButtons();
     }
 
     void OnDisable()
@@ -99,19 +93,40 @@ public class ShopUIController : MonoBehaviour
         ShopManager.OnShopUpdated        -= RefreshUI;
     }
 
-    void Start()
+    public void WireButtons()
     {
         if (closeButton != null)
+        {
+            closeButton.onClick.RemoveListener(CloseShop);
             closeButton.onClick.AddListener(CloseShop);
+        }
 
         if (tabHatsButton != null)
-            tabHatsButton.onClick.AddListener(() => SwitchCategory(CosmeticType.Hat));
+        {
+            tabHatsButton.onClick.RemoveListener(SelectHats);
+            tabHatsButton.onClick.AddListener(SelectHats);
+        }
 
         if (tabSkinsButton != null)
-            tabSkinsButton.onClick.AddListener(() => SwitchCategory(CosmeticType.Skin));
+        {
+            tabSkinsButton.onClick.RemoveListener(SelectSkins);
+            tabSkinsButton.onClick.AddListener(SelectSkins);
+        }
 
         if (tabTrailsButton != null)
-            tabTrailsButton.onClick.AddListener(() => SwitchCategory(CosmeticType.Trail));
+        {
+            tabTrailsButton.onClick.RemoveListener(SelectTrails);
+            tabTrailsButton.onClick.AddListener(SelectTrails);
+        }
+    }
+
+    public void SelectHats()   => SwitchCategory(CosmeticType.Hat);
+    public void SelectSkins()  => SwitchCategory(CosmeticType.Skin);
+    public void SelectTrails() => SwitchCategory(CosmeticType.Trail);
+
+    void Start()
+    {
+        WireButtons();
 
         if (shopPanel != null)
             shopPanel.SetActive(false);
@@ -123,8 +138,15 @@ public class ShopUIController : MonoBehaviour
         }
     }
 
+    private GameState openedFromState = GameState.MainMenu;
+
     public void OpenShop()
     {
+        if (FlappyGameManager.instance != null)
+            openedFromState = FlappyGameManager.instance.CurrentState;
+        else
+            openedFromState = GameState.MainMenu;
+
         if (shopPanel != null) shopPanel.SetActive(true);
         UpdateCoinBalance();
         SwitchCategory(CosmeticType.Hat);
@@ -134,8 +156,17 @@ public class ShopUIController : MonoBehaviour
     public void CloseShop()
     {
         if (shopPanel != null) shopPanel.SetActive(false);
-        if (HUDController.instance != null)
-            HUDController.instance.ShowMainMenu();
+
+        if (openedFromState == GameState.GameOver)
+        {
+            if (HUDController.instance != null)
+                HUDController.instance.ShowGameOverScreen();
+        }
+        else
+        {
+            if (HUDController.instance != null)
+                HUDController.instance.ShowMainMenu();
+        }
     }
 
     public void SwitchCategory(CosmeticType type)

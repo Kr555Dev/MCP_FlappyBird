@@ -12,7 +12,19 @@ public class FlappyGameManager : MonoBehaviour
     // -------------------------------------------------------------------------
     // Singleton
     // -------------------------------------------------------------------------
-    public static FlappyGameManager instance { get; private set; }
+    private static FlappyGameManager _instance;
+    public static FlappyGameManager instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<FlappyGameManager>();
+            }
+            return _instance;
+        }
+        private set => _instance = value;
+    }
 
     // -------------------------------------------------------------------------
     // Config
@@ -51,8 +63,8 @@ public class FlappyGameManager : MonoBehaviour
     // =========================================================================
     void Awake()
     {
-        if (instance != null && instance != this) { Destroy(gameObject); return; }
-        instance = this;
+        if (_instance != null && _instance != this) { Destroy(gameObject); return; }
+        _instance = this;
 
         Application.runInBackground = true;
 
@@ -65,8 +77,10 @@ public class FlappyGameManager : MonoBehaviour
 
     void OnDestroy()
     {
-        if (instance == this) instance = null;
+        if (_instance == this) _instance = null;
     }
+
+    public static bool autoStartOnLoad = false;
 
     void Start()
     {
@@ -76,12 +90,27 @@ public class FlappyGameManager : MonoBehaviour
             return;
         }
 
-        TransitionTo(GameState.MainMenu);
+        if (autoStartOnLoad)
+        {
+            autoStartOnLoad = false;
+            TransitionTo(GameState.Playing);
+        }
+        else
+        {
+            TransitionTo(GameState.MainMenu);
+        }
     }
 
     // =========================================================================
     // State Machine
     // =========================================================================
+    public void SetStateMainMenu()
+    {
+        ResetDifficulty();
+        if (config != null) Lives = config.startingLives;
+        TransitionTo(GameState.MainMenu);
+    }
+
     void TransitionTo(GameState next)
     {
         CurrentState   = next;
@@ -91,7 +120,15 @@ public class FlappyGameManager : MonoBehaviour
 
     public void StartGame()
     {
-        if (CurrentState != GameState.MainMenu) return;
+        if (CurrentState == GameState.Playing) return;
+
+        if (CurrentState == GameState.GameOver || Lives <= 0)
+        {
+            autoStartOnLoad = true;
+            RestartGame();
+            return;
+        }
+
         TransitionTo(GameState.Playing);
     }
 

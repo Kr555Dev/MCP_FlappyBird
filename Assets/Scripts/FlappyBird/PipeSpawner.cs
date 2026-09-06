@@ -12,7 +12,19 @@ public class PipeSpawner : MonoBehaviour
     // -------------------------------------------------------------------------
     // Singleton (lightweight — only one spawner ever exists)
     // -------------------------------------------------------------------------
-    public static PipeSpawner instance { get; private set; }
+    private static PipeSpawner _instance;
+    public static PipeSpawner instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<PipeSpawner>();
+            }
+            return _instance;
+        }
+        private set => _instance = value;
+    }
 
     // -------------------------------------------------------------------------
     // Inspector
@@ -42,8 +54,13 @@ public class PipeSpawner : MonoBehaviour
     // =========================================================================
     void Awake()
     {
-        if (instance != null && instance != this) { Destroy(gameObject); return; }
-        instance = this;
+        if (_instance != null && _instance != this) { Destroy(gameObject); return; }
+        _instance = this;
+    }
+
+    void OnDestroy()
+    {
+        if (_instance == this) _instance = null;
     }
 
     void OnEnable()  => FlappyGameManager.OnGymLevelUp += HandleGymLevelUp;
