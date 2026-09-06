@@ -126,17 +126,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.045888424, y: -0.29641533}
+  m_Offset: {x: 0.045888424, y: -0.25499928}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.65, y: 5.36}
+    oldSize: {x: 4.65, y: 4.47}
     newSize: {x: 4.65, y: 5.36}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.72268, y: 4.767169}
+  m_Size: {x: 2.72268, y: 4.8500013}
   m_EdgeRadius: 0
 --- !u!1 &3281207466555698944
 GameObject:
@@ -185,7 +185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d965d60be75a2d74ca68b646785327a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PipeMover
-  speed: 4
 --- !u!1 &3451332275254549010
 GameObject:
   m_ObjectHideFlags: 0
@@ -390,15 +389,15 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.06654489, y: -0.502151}
+  m_Offset: {x: 0.06654489, y: -0.25805748}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.65, y: 5.36}
+    oldSize: {x: 4.65, y: 4.47}
     newSize: {x: 4.65, y: 5.36}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 2.853287, y: 4.3556986}
+  m_Size: {x: 2.853287, y: 4.8438854}
   m_EdgeRadius: 0

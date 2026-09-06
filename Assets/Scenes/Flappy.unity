@@ -243,14 +243,26 @@ MonoBehaviour:
   - {fileID: 908942748}
   - {fileID: 506164542}
   - {fileID: 1724447142}
+  coinCounterHUD: {fileID: 0}
+  runCoinText: {fileID: 0}
   gymLevelPanel: {fileID: 545326578}
   gymLevelText: {fileID: 2007536781}
   mainMenuPanel: {fileID: 2129400288}
   startButton: {fileID: 1763471171}
+  menuShopButton: {fileID: 0}
+  menuBestScoreText: {fileID: 0}
+  menuTotalCoinsText: {fileID: 0}
   gameOverPanel: {fileID: 381663412}
+  gameOverTitleText: {fileID: 0}
   finalScoreText: {fileID: 134625203}
   bestScoreText: {fileID: 1207984868}
+  coinsEarnedText: {fileID: 0}
   restartButton: {fileID: 171113094}
+  gameOverShopButton: {fileID: 0}
+  shopController: {fileID: 0}
+  cardBackgroundSprite: {fileID: 0}
+  pillButtonSprite: {fileID: 0}
+  pikachuCoinSprite: {fileID: 0}
 --- !u!1 &134625200
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,8 +297,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 100}
-  m_SizeDelta: {x: 600, y: 200}
+  m_AnchoredPosition: {x: 0, y: 95}
+  m_SizeDelta: {x: 400, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &134625202
 CanvasRenderer:
@@ -506,8 +518,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -100}
-  m_SizeDelta: {x: 300, y: 100}
+  m_AnchoredPosition: {x: 0, y: -75}
+  m_SizeDelta: {x: 280, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &173975663
 GameObject:
@@ -1698,8 +1710,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -60}
-  m_SizeDelta: {x: 700, y: 110}
+  m_AnchoredPosition: {x: 0, y: 45}
+  m_SizeDelta: {x: 400, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1207984867
 CanvasRenderer:
@@ -1835,7 +1847,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 200}
+  m_AnchoredPosition: {x: 0, y: 299}
   m_SizeDelta: {x: 1100, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1331466510
@@ -1972,7 +1984,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -50}
+  m_AnchoredPosition: {x: 0, y: 104}
   m_SizeDelta: {x: 900, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1592089509

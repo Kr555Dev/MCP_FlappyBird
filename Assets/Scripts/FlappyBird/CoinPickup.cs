@@ -21,6 +21,27 @@ public class CoinPickup : MonoBehaviour
         // Ensure trigger is set up correctly
         CircleCollider2D c = GetComponent<CircleCollider2D>();
         c.isTrigger = true;
+
+        if (collectSound == null || collectSound.name == "Pikachu ! Notification Sound")
+        {
+            collectSound = Resources.Load<AudioClip>("Audio/coin_chime") ?? Resources.Load<AudioClip>("coin_chime");
+        }
+
+        // Ensure coin sprite is used instead of pikachuuu
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null && (sr.sprite == null || sr.sprite.name == "pikachuuu"))
+        {
+            Sprite coinSp = Resources.Load<Sprite>("UI/coin") ?? Resources.Load<Sprite>("coin");
+#if UNITY_EDITOR
+            if (coinSp == null)
+                coinSp = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>("Assets/sprites/coin.png");
+#endif
+            if (coinSp != null)
+            {
+                sr.sprite = coinSp;
+                sr.color = Color.white;
+            }
+        }
     }
 
     void Update()
@@ -59,6 +80,7 @@ public class CoinPickup : MonoBehaviour
 
         int val = FlappyGameManager.instance?.config?.coinScoreValue ?? 3;
         FlappyGameManager.instance?.AddBonusScore(val);
+        FlappyGameManager.instance?.AddCoin(1);
 
         if (collectSound != null)
         {

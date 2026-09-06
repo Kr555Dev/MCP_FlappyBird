@@ -110,3 +110,22 @@ Assets/sprites/*
 !Assets/sprites/pidgeotto-256x256.png.meta
 !Assets/sprites/pikachuuu.png
 !Assets/sprites/pikachuuu.png.meta
+!Assets/sprites/coin.png
+!Assets/sprites/coin.png.meta
+!Assets/sprites/heart.png
+!Assets/sprites/heart.png.meta
+
+# Resources: only Flappy resources
+!Assets/Resources.meta
+Assets/Resources/*
+!Assets/Resources/Cosmetics/
+!Assets/Resources/Cosmetics/**
+!Assets/Resources/Cosmetics.meta
+!Assets/sounds/coin_chime.wav
+!Assets/sounds/coin_chime.wav.meta
+!Assets/Resources/Audio/
+!Assets/Resources/Audio/**
+!Assets/Resources/Audio.meta
+!Assets/Resources/UI/
+!Assets/Resources/UI/**
+!Assets/Resources/UI.meta

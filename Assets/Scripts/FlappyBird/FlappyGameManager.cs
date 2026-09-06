@@ -27,6 +27,7 @@ public class FlappyGameManager : MonoBehaviour
     public static event Action<int>       OnLivesChanged;
     public static event Action<int>       OnGymLevelUp;       // passes new gym level number
     public static event Action<GameState> OnGameStateChanged;
+    public static event Action<int, int>  OnCoinsChanged;     // passes (runCoins, totalCoins)
 
     // -------------------------------------------------------------------------
     // Public read-only state (safe to read from any script)
@@ -38,6 +39,8 @@ public class FlappyGameManager : MonoBehaviour
     public int       GymLevel            { get; private set; } = 1;
     public int       Score               { get; private set; }
     public int       Lives               { get; private set; }
+    public int       RunCoins            { get; private set; }
+    public int       TotalCoins          => PlayerPrefs.GetInt("TotalCoins", 0);
     public int       BestScore           => PlayerPrefs.GetInt("BestScore", 0);
 
     // -------------------------------------------------------------------------
@@ -125,6 +128,30 @@ public class FlappyGameManager : MonoBehaviour
         OnScoreChanged?.Invoke(Score);
     }
 
+    /// <summary>Called when player collects a coin currency pickup.</summary>
+    public void AddCoin(int amount = 1)
+    {
+        RunCoins += amount;
+        int newTotal = TotalCoins + amount;
+        PlayerPrefs.SetInt("TotalCoins", newTotal);
+        PlayerPrefs.Save();
+        OnCoinsChanged?.Invoke(RunCoins, newTotal);
+    }
+
+    /// <summary>Called when purchasing cosmetics from the Shop.</summary>
+    public bool SpendCoins(int amount)
+    {
+        if (TotalCoins >= amount)
+        {
+            int newTotal = TotalCoins - amount;
+            PlayerPrefs.SetInt("TotalCoins", newTotal);
+            PlayerPrefs.Save();
+            OnCoinsChanged?.Invoke(RunCoins, newTotal);
+            return true;
+        }
+        return false;
+    }
+
     // =========================================================================
     // Lives & Death
     // =========================================================================
@@ -181,6 +208,8 @@ public class FlappyGameManager : MonoBehaviour
         CurrentGapHalfHeight  = config.baseGapHalfHeight;
         pipesPassedThisGym    = 0;
         GymLevel              = 1;
+        RunCoins              = 0;
+        OnCoinsChanged?.Invoke(RunCoins, TotalCoins);
     }
 
     void ApplyDifficultyStep()
